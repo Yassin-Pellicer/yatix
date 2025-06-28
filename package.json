@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
+    "@reduxjs/toolkit": "^2.8.2",
     "next": "15.3.4",
     "prisma": "^6.10.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
