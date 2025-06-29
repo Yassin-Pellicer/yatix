@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -9,31 +8,92 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  phone     Int
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+  name     String
+  phone    Int
 }
 
 model Promoter {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  phone     Int
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+  name     String
+  phone    Int
 
-  created_events Event[] @relation("MANAGES")
+  events Event[] @relation("MANAGES")
 }
 
 model Event {
-  id         String   @id @default(cuid())
-  title      String
-  location   String
-  date       DateTime
-  capacity   Int
+  id       String   @id @default(cuid())
+  title    String
+  location String
+  date     DateTime
 
-  promoter Promoter @relation("MANAGES", fields: [promoter_id], references: [id])
-  promoter_id String
+  promoter   Promoter @relation("MANAGES", fields: [promoterId], references: [id])
+  promoterId String
+
+  sessions Session[]
 }
 
+model Session {
+  id   String @id @default(cuid())
+  name String
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  tickets Ticket[]
+}
+
+model Ticket {
+  id          String @id @default(cuid())
+  name        String
+  conditions  String
+  description String
+  price       Int
+
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  zoneId String?
+  zone   Zone?   @relation(fields: [zoneId], references: [id])
+  Seat   Seat[]
+}
+
+model Map {
+  id            String @id @default(cuid())
+  name          String
+  totalCapacity Int
+
+  sessionId String  @unique
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  zones Zone[]
+}
+
+model Zone {
+  id       String @id @default(cuid())
+  name     String
+  capacity Int
+
+  mapId String
+  map   Map    @relation(fields: [mapId], references: [id])
+
+  tickets Ticket[]
+  seats   Seat[]
+}
+
+model Seat {
+  id    String @id @default(cuid())
+  label String // e.g. "A1", "B12", "VIP-5"
+
+  // Link to Zone
+  zoneId String
+  zone   Zone   @relation(fields: [zoneId], references: [id])
+
+  // Optional: Link to Ticket if you want assigned seating
+  ticket   Ticket? @relation(fields: [ticketId], references: [id])
+  ticketId String?
+}
