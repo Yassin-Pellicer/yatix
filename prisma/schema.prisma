@@ -22,7 +22,8 @@ model Promoter {
   name     String
   phone    Int
 
-  events Event[] @relation("MANAGES")
+  enclosures Enclosure[]
+  events Event[]
 }
 
 model Event {
@@ -31,7 +32,7 @@ model Event {
   location String
   date     DateTime
 
-  promoter   Promoter @relation("MANAGES", fields: [promoterId], references: [id])
+  promoter   Promoter @relation(fields: [promoterId], references: [id])
   promoterId String
 
   sessions Session[]
@@ -62,24 +63,23 @@ model Ticket {
   Seat   Seat[]
 }
 
-model Map {
+model Enclosure {
   id            String @id @default(cuid())
   name          String
   totalCapacity Int
 
-  sessionId String  @unique
-  session   Session @relation(fields: [sessionId], references: [id])
+  promoter Promoter @relation(fields: [promoterId], references: [id])
+  promoterId String
 
   zones Zone[]
 }
 
 model Zone {
   id       String @id @default(cuid())
-  name     String
-  capacity Int
+  name     String  capacity Int
 
-  mapId String
-  map   Map    @relation(fields: [mapId], references: [id])
+  enclosureId String
+  enclosure   Enclosure    @relation(fields: [enclosureId], references: [id])
 
   tickets Ticket[]
   seats   Seat[]
@@ -87,13 +87,11 @@ model Zone {
 
 model Seat {
   id    String @id @default(cuid())
-  label String // e.g. "A1", "B12", "VIP-5"
+  label String 
 
-  // Link to Zone
   zoneId String
   zone   Zone   @relation(fields: [zoneId], references: [id])
 
-  // Optional: Link to Ticket if you want assigned seating
   ticket   Ticket? @relation(fields: [ticketId], references: [id])
   ticketId String?
 }
