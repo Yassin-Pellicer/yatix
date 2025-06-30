@@ -76,7 +76,8 @@ model Enclosure {
 
 model Zone {
   id       String @id @default(cuid())
-  name     String  capacity Int
+  name     String  
+  capacity Int
 
   enclosureId String
   enclosure   Enclosure    @relation(fields: [enclosureId], references: [id])
