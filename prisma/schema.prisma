@@ -36,6 +36,7 @@ model Event {
   promoterId String
 
   sessions Session[]
+  passes Pass[]
 }
 
 model Session {
@@ -46,6 +47,9 @@ model Session {
   event   Event  @relation(fields: [eventId], references: [id])
 
   tickets Ticket[]
+  groups Group[]
+  
+
 }
 
 model Ticket {
@@ -58,9 +62,41 @@ model Ticket {
   sessionId String
   session   Session @relation(fields: [sessionId], references: [id])
 
+  passId String
+  pass  Pass  @relation(fields: [passId], references: [id])
+
   zoneId String?
   zone   Zone?   @relation(fields: [zoneId], references: [id])
-  Seat   Seat[]
+}
+
+model Group {
+  id          String @id @default(cuid())
+  name        String
+  conditions  String
+  description String
+  price       Int
+
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  passId String
+  pass  Pass  @relation(fields: [passId], references: [id])
+
+  zoneId String?
+  zone   Zone?   @relation(fields: [zoneId], references: [id]) 
+}
+
+model Pass {
+  id String @id @default(cuid())
+  name String
+  conditions String
+  description String
+  price Int
+
+  eventId String
+  event Event @relation(fields: [eventId], references: [id])
+
+  tickets Ticket[]
 }
 
 model Enclosure {
@@ -92,7 +128,4 @@ model Seat {
 
   zoneId String
   zone   Zone   @relation(fields: [zoneId], references: [id])
-
-  ticket   Ticket? @relation(fields: [ticketId], references: [id])
-  ticketId String?
 }
