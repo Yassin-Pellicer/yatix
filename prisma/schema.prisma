@@ -79,11 +79,8 @@ model Group {
   sessionId String
   session   Session @relation(fields: [sessionId], references: [id])
 
-  passId String
-  pass  Pass  @relation(fields: [passId], references: [id])
-
-  zoneId String?
-  zone   Zone?   @relation(fields: [zoneId], references: [id]) 
+  passId String?
+  pass  Pass?  @relation(fields: [passId], references: [id])
 }
 
 model Pass {
@@ -96,6 +93,7 @@ model Pass {
   eventId String
   event Event @relation(fields: [eventId], references: [id])
 
+  groups Group[]
   tickets Ticket[]
 }
 
